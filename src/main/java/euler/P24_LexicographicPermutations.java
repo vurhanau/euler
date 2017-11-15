@@ -1,31 +1,39 @@
 package euler;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+import static java.util.Collections.emptyList;
+
 public class P24_LexicographicPermutations {
+    private static final int LIMIT = 1_000_000;
 
     public static void main(String[] args) {
-        int input = 0b1111111111;
-        System.out.println("Original");
-        System.out.println(isAvailable(input, 1));
-        System.out.println(isAvailable(input, 5));
+        TreeSet<Character> chars = new TreeSet<>();
+        for (Character c = '0'; c <= '9'; c++) {
+            chars.add(c);
+        }
 
-        input = flip(input, 1);
-        System.out.println("Off: 1");
-        System.out.println(isAvailable(input, 1));
-        System.out.println(isAvailable(input, 5));
-
-        input = flip(input, 5);
-        System.out.println("Off: 5");
-        System.out.println(isAvailable(input, 1));
-        System.out.println(isAvailable(input, 5));
+        permutations(emptyList(), chars, new AtomicInteger(0));
     }
 
-    static boolean isAvailable(int input, int digit) {
-        int mask = 1 << digit;
-        return (input & mask) != 0;
-    }
+    public static void permutations(List<Character> current, TreeSet<Character> available, AtomicInteger counter) {
+        if (available.isEmpty()) {
+            if (counter.incrementAndGet() == LIMIT) {
+                System.out.println(current.stream().map(Object::toString).collect(Collectors.joining()));
+            }
+            return;
+        }
 
-    static int flip(int input, int digit) {
-        int mask = 1 << digit;
-        return (input ^ mask);
+        for (Character next : available) {
+            List<Character> newCurrent = new ArrayList<>(current);
+            newCurrent.add(next);
+            TreeSet<Character> newAvailable = new TreeSet<>(available);
+            newAvailable.remove(next);
+            permutations(newCurrent, newAvailable, counter);
+        }
     }
 }
