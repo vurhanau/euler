@@ -6,18 +6,42 @@ import java.util.List;
 public class P26_ReciprocalCycles {
 
     public static void main(String[] args) {
-        int n = 1000;
-        int max = Integer.MIN_VALUE;
-        int nmax = -1;
-        for (int i = 1; i < n; i++) {
-            int cycle = cycle(i);
-            if (cycle > max) {
-                max = cycle;
-                nmax = i;
+        nice();
+//        int n = 1000;
+//        int max = Integer.MIN_VALUE;
+//        int nmax = -1;
+//        for (int i = 1; i < n; i++) {
+//            int cycle = cycle(i);
+//            if (cycle > max) {
+//                max = cycle;
+//                nmax = i;
+//            }
+//        }
+//        System.out.println(nmax);
+    }
+
+    private static void nice() {
+        int n, i, len, maxlen = 0, maxn = 0;
+        maxlen = 0;
+        for (n = 2; n <= 1000; n++) {
+            int rest = 1;
+            int r0;
+            for (i = 0; i < n; i++)
+                rest = (rest * 10) % n;
+            r0 = rest;
+            len = 0;
+            do {
+                rest = (rest * 10) % n;
+                len++;
+            } while (rest != r0);
+            if (len > maxlen) {
+                maxn = n;
+                maxlen = len;
             }
         }
-        System.out.println(nmax);
+        System.out.println(maxn + ": " + maxlen);
     }
+
 
     private static int cycle(int d) {
         int mod = 1;
